@@ -88,7 +88,9 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public boolean contains(Integer item) {
-        return indexOf(item) != -1;
+       Integer[] storageCopy = toArray();
+       sort(storageCopy);
+       return binarySearch(item, storageCopy);
     }
 
     @Override
@@ -166,6 +168,40 @@ public class IntegerListImpl implements IntegerList {
         if (index < 0 || index >= size) {
             throw new InvalidIndexException();
         }
+    }
+
+    private void sort(Integer[]arr){
+        for (int i = 1; i < arr.length; i++) {
+            int temp = arr[i];
+            int j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
+            }
+            arr[j] = temp;
+        }
+    }
+
+    private boolean binarySearch(Integer item, Integer[]arr){
+
+        int min = 0;
+        int max = arr.length - 1;
+
+        while (min <= max) {
+            int mid = (min + max) / 2;
+
+            if (item == arr[mid]) {
+                return true;
+            }
+
+            if (item < arr[mid]) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return false;
+
     }
 
 
